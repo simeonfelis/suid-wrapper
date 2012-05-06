@@ -53,14 +53,14 @@ int main( int argc, char ** argv, char ** envp )
 		exit( 255 );
 	}
 
-    if( getuid() != 33 ) { /* as of /etc/passwd */
-        printf( "You don't have permissions to run this wrapper\n" );
-        exit(255);
-    }
-    if( getgid() != 33 ) { /* as of /etc/passwd */
-        printf( "You don't belong to group with permissions to run run this wrapper\n" );
-        exit(255);
-    }
+	if( getuid() != 33 ) { /* as of /etc/passwd */
+		printf( "You don't have permissions to run this wrapper\n" );
+		exit( 255 );
+	}
+	if( getgid() != 33 ) { /* as of /etc/passwd */
+		printf( "You don't belong to group with permissions to run run this wrapper\n" );
+		exit( 255 );
+	}
 
 	if( setgid(getegid()) ) 
 		perror( "setgid" );
@@ -73,9 +73,9 @@ int main( int argc, char ** argv, char ** envp )
 
 	if ( nPid < 0 ) {
 		perror( "fork() did not succeed");
-		exit(255);
+		exit( 255 );
 	}
-	else if ( nPid == 0) {
+	else if ( nPid == 0 ) {
 		/* I'm the parent, waiting for childs to come home */
 		waitpid(nPid, &status, 0);
 		exit_status = WEXITSTATUS(status);
@@ -84,8 +84,8 @@ int main( int argc, char ** argv, char ** envp )
 	}
 	else {
 		/* I'm the child */
-        /* if you know a better way to SAFELY determine the arguments passed 
-         * to the wrapper, let me know */
+		/* if you know a better way to SAFELY determine the arguments 
+		 * passed to the wrapper, let me know */
 		if( argc == 2)
 			execlp( STR(SCRIPT_PATH), STR(SCRIPT_NAME), argv[1], NULL);
 		else if( argc == 3)
@@ -94,10 +94,10 @@ int main( int argc, char ** argv, char ** envp )
 			execlp( STR(SCRIPT_PATH), STR(SCRIPT_NAME), argv[1], argv[2], argv[3], NULL);
 		else if( argc == 5 )
 			execlp( STR(SCRIPT_PATH), STR(SCRIPT_NAME), argv[1], argv[2], argv[3], argv[4], NULL);
-	
+
 		perror( "execlp of script failed?" );
 	}
 
-    exit(255);
+	exit( 255 );
 }
 
