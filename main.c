@@ -40,6 +40,14 @@
 #error "SCRIPT_NAME not defined"
 #endif
 
+#ifndef ALLOWED_UID
+#error "ALLOWED_UID not defined"
+#endif
+
+#ifndef ALLOWED_GID
+#error "ALLOWED_GID not defined"
+#endif
+
 #define STR(s) #s
 
 int main( int argc, char ** argv, char ** envp )
@@ -47,26 +55,28 @@ int main( int argc, char ** argv, char ** envp )
 	pid_t nPid;
 	int status;
 	int exit_status;
+	const int allowed_uid = ALLOWED_UID;
+	const int allowed_gid = ALLOWED_GID;
 	
 	if( argc > 5) {
 		printf( "The wrapper only supports up to 4 arguments\n" );
 		exit( 255 );
 	}
 
-	if( getuid() != 33 ) { /* as of /etc/passwd */
+	if( getuid() != allowed_gid ) { /* as of /etc/passwd */
 		printf( "You don't have permissions to run this wrapper\n" );
 		exit( 255 );
 	}
-	if( getgid() != 33 ) { /* as of /etc/passwd */
+	if( getgid() != allowed_sid ) { /* as of /etc/passwd */
 		printf( "You don't belong to group with permissions to run run this wrapper\n" );
 		exit( 255 );
 	}
 
 	if( setgid(getegid()) ) 
-		perror( "setgid" );
+		perror( "set setgid" );
 
 	if( setuid(geteuid()) ) 
-		perror( "setuid" );
+		perror( "set setuid" );
 
 
 	nPid = fork();
