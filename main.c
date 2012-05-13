@@ -63,11 +63,11 @@ int main( int argc, char ** argv, char ** envp )
 		exit( 255 );
 	}
 
-	if( getuid() != allowed_gid ) { /* as of /etc/passwd */
+	if( getuid() != allowed_uid ) { /* as of /etc/passwd */
 		printf( "You don't have permissions to run this wrapper\n" );
 		exit( 255 );
 	}
-	if( getgid() != allowed_sid ) { /* as of /etc/passwd */
+	if( getgid() != allowed_gid ) { /* as of /etc/passwd */
 		printf( "You don't belong to group with permissions to run run this wrapper\n" );
 		exit( 255 );
 	}
